@@ -181,33 +181,17 @@ catkin_package(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(sumotraffic2ros_node)
+add_executable(${PROJECT_NAME}_node )
 target_sources(
-  sumotraffic2ros_node PRIVATE 
+  ${PROJECT_NAME}_node  PRIVATE 
   src/sumotraffic2ros.cpp
   src/sumotls2ros.cpp
 )
 target_include_directories(
-  sumotraffic2ros_node PRIVATE include
+  ${PROJECT_NAME}_node  PRIVATE include
   ${sumo_src_dir}
   ${catkin_INCLUDE_DIRS}
 )
-                
-## Rename C++ executable without prefix
-## The above recommended prefix causes long target names, the following renames the
-## target back to the shorter version for ease of user use
-## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
-
-## Add cmake target dependencies of the executable
-## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-add_executable(${PROJECT_NAME}_node 
-    src/sumotls2ros.cpp 
-    src/sumotraffic2ros.cpp 
-)
-add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME}_node 
                       ${catkin_LIBRARIES} 
                       coordinate_conversion::coordinate_conversion
@@ -234,18 +218,8 @@ target_link_libraries(${PROJECT_NAME}_node
 # )
 install(
   TARGETS 
-  sumotraffic2ros_node
+  ${PROJECT_NAME}_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-install(
-  PROGRAMS 
-  launch/sumo_example.sh 
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-install(
-  PROGRAMS 
-  launch/start_sumo.sh 
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 ## Mark libraries for installation
