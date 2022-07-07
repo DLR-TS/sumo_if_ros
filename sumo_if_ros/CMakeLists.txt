@@ -12,6 +12,7 @@
 #*   Daniel Heß
 #*   Stephan Lapoehn
 #*   Thomas Lobig
+#*   Andrew Koerner
 #********************************************************************************
 cmake_minimum_required(VERSION 3.13)
 project(sumo_if_ros)
@@ -33,6 +34,7 @@ set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL NO)
 list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_if_ros_msg/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../v2x_if_ros_msg/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../coordinate_conversion/build/install")
 
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -50,6 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
   dsrc_v2_mapem_pdu_descriptions
 	dsrc_v2_spatem_pdu_descriptions
 	its_container_v2_its_container
+  coordinate_conversion
 )
 
 ## System dependencies are found with CMake's conventions

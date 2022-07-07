@@ -33,6 +33,10 @@ COPY --from=v2x_if_ros_msg /tmp/v2x_if_ros_msg /tmp/v2x_if_ros_msg
 WORKDIR /tmp/v2x_if_ros_msg/build
 RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
 
+COPY --from=coordinate_conversion /tmp/coordinate_conversion /tmp/coordinate_conversion
+WORKDIR /tmp/coordinate_conversion/build
+RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
+
 
 SHELL ["/bin/bash", "-c"]
 WORKDIR /tmp/${PROJECT}/build

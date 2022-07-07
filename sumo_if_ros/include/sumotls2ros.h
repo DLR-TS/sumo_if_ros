@@ -19,7 +19,7 @@
 
 #include "tcd/MAPEMIntersection.h"
 #include "coordinate.h"
-#include <adore/mad/coordinateconversion.h>
+#include <coordinate_conversion/coordinate_conversion.h>
 #include <unordered_map>
 #include <v2xsim/SimMAPEM.h>
 #include <v2xsim/SimSPATEM.h>
