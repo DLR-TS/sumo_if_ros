@@ -1,9 +1,6 @@
 [submodule "adore_if_ros_msg"]
 	path = adore_if_ros_msg
 	url = git@github.com:DLR-TS/adore_if_ros_msg.git
-[submodule "v2x_if_ros_msg"]
-	path = v2x_if_ros_msg
-	url = git@github.com:DLR-TS/v2x_if_ros_msg.git
 [submodule "sumo/sumo"]
 	path = sumo/sumo
     url = https://github.com/eclipse/sumo.git
@@ -27,3 +24,10 @@
 	branch = master
     shallow = true
     ignore = dirty
+[submodule "adore_v2x_sim"]
+	path = adore_v2x_sim
+	url = git@github.com:DLR-TS/adore_v2x_sim.git
+[submodule "v2x_if_ros_msg"]
+	path = v2x_if_ros_msg
+	url = git@github.com:DLR-TS/v2x_if_ros_msg.git
+	branch = master

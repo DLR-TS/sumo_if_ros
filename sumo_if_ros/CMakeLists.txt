@@ -16,21 +16,23 @@
 cmake_minimum_required(VERSION 3.13)
 project(sumo_if_ros)
 
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 set(PACKAGE_VENDOR "DLR TS-KOS-SAI")
 set(PACKAGE_DESCRIPTION "Automated Driving Open Research: sumo interface libraries")
 set(PACKAGE_MAINTAINER "DLR TS-KOS-SAI")
 set(PACKAGE_MAINTAINER_EMAIL "ts-kos-sai@dlr.de")
 
+include(GNUInstallDirs)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-#include(Packing)
+include(Packing)
 
 set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL NO)
 
-include(GNUInstallDirs)
 
 list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../adore_if_ros_msg/adore_if_ros_msg/build/install")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../v2x_if_ros_msg/v2x_if_ros_msg/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_if_ros_msg/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../v2x_if_ros_msg/build/install")
 
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -45,7 +47,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   adore_if_ros_msg
-  v2x_if_ros_msg
+  dsrc_v2_mapem_pdu_descriptions
+	dsrc_v2_spatem_pdu_descriptions
+	its_container_v2_its_container
 )
 
 ## System dependencies are found with CMake's conventions
@@ -140,7 +144,10 @@ catkin_package(
 #  LIBRARIES sumo_if_ros
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
-  CATKIN_DEPENDS adore_if_ros_msg v2x_if_ros_msg v2xsim
+  CATKIN_DEPENDS 
+    adore_if_ros_msg 
+    v2x_if_ros_msg 
+    adore_v2x_sim
 )
 
 ###########
@@ -176,9 +183,6 @@ target_sources(
   sumotraffic2ros_node PRIVATE 
   src/sumotraffic2ros.cpp
   src/sumotls2ros.cpp
-  ${sumo_src_dir}/utils/traci/TraCIAPI.cpp 
-  ${sumo_src_dir}/foreign/tcpip/socket.cpp
-  ${sumo_src_dir}/foreign/tcpip/storage.cpp
 )
 target_include_directories(
   sumotraffic2ros_node PRIVATE include

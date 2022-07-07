@@ -9,7 +9,7 @@ VERSION="latest"
 TAG="${PROJECT}:${VERSION}"
 
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-:
+
 MAKEFLAGS += --no-print-directory
 .EXPORT_ALL_VARIABLES:
 DOCKER_BUILDKIT?=1
@@ -27,7 +27,7 @@ clean:
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	rm -rf "${ROOT_DIR}/sumo/sumo/.build"
 	cd adore_if_ros_msg && make clean
-	cd v2x_if_ros_msg && make clean
+	cd adore_v2x_sim && make clean
 	docker rm $$(docker ps -a -q --filter "ancestor=${SUMO_IMAGE_NAME}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${SUMO_IMAGE_NAME}) 2> /dev/null || true
 	docker rmi ${SUMO_IMAGE_NAME} --force 2> /dev/null
@@ -36,12 +36,16 @@ clean:
 	docker rmi ${TAG} --force 2> /dev/null
 
 .PHONY: build
-build: clean build_v2x_if_ros_msg adore_if_ros_msg build_sumo build_sumo_if_ros
+build: clean build_adore_if_ros_msg  build_adore_v2x_sim build_sumo build_sumo_if_ros
 
+.PHONY: build_adore_if_ros_msg
+build_adore_if_ros_msg:
+	cd "${ROOT_DIR}/adore_if_ros_msg" && \
+	make
 
-.PHONY: build_v2x_if_ros_msg
-build_v2x_if_ros_msg:
-	cd "${ROOT_DIR}/v2x_if_ros_msg" && \
+.PHONY: build_adore_v2x_sim
+build_adore_v2x_sim:
+	cd "${ROOT_DIR}/adore_v2x_sim" && \
 	make
 
 .PHONY: build_sumo_if_ros

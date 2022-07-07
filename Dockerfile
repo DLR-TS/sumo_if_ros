@@ -1,7 +1,7 @@
 ARG PROJECT="sumo_if_ros"
 
 FROM adore_if_ros_msg:latest AS adore_if_ros_msg
-FROM v2x_if_ros_msg:latest AS v2x_if_ros_msg
+FROM adore_v2x_sim:latest AS adore_v2x_sim
 FROM sumo:v1_8_0 as sumo
 FROM ros:noetic-ros-core-focal AS sumo_if_ros_builder
 
@@ -21,21 +21,22 @@ COPY sumo/sumo /tmp/sumo
 RUN mkdir -p /tmp/${PROJECT}
 COPY ${PROJECT} /tmp/${PROJECT}
 
-ENV adore_if_ros_msg_DIR=/tmp/adore_if_ros_msg/build/cmake
 COPY --from=adore_if_ros_msg /tmp/adore_if_ros_msg /tmp/adore_if_ros_msg
 WORKDIR /tmp/adore_if_ros_msg/build
 RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
 
-ENV v2x_if_ros_msg_DIR=/tmp/v2x_if_ros_msg/build/cmake
+COPY --from=adore_v2x_sim /tmp/adore_v2x_sim /tmp/adore_v2x_sim
+WORKDIR /tmp/adore_v2x_sim/build
+RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
+
 COPY --from=v2x_if_ros_msg /tmp/v2x_if_ros_msg /tmp/v2x_if_ros_msg
 WORKDIR /tmp/v2x_if_ros_msg/build
-RUN cmake --install . --prefix /tmp/${PROJECT}/build/install 
-
-
 RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
+
+
 SHELL ["/bin/bash", "-c"]
-RUN mkdir -p /tmp/${PROJECT}/build
 WORKDIR /tmp/${PROJECT}/build
+
 #RUN mkdir -p build && \
 #    cd build && \
 #    source /opt/ros/noetic/setup.bash && \
@@ -51,9 +52,13 @@ WORKDIR /tmp/${PROJECT}/build
 #    cmake --build . --config Release --target install -- -j $(nproc) && \
 #    cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t .
 
-RUN cmake .. -DBUILD_adore_TESTING=ON -DCMAKE_PREFIX_PATH=install -DCMAKE_INSTALL_PREFIX:PATH=install && \
-    cmake --build . --config Release --target install -- -j $(nproc)
+#RUN cmake .. -DBUILD_adore_TESTING=ON -DCMAKE_PREFIX_PATH=install -DCMAKE_INSTALL_PREFIX:PATH=install && \
+#    cmake --build . --config Release --target install -- -j $(nproc)
 
+RUN source /opt/ros/noetic/setup.bash && \
+    cmake .. && \
+    cmake --build . --config Release --target install -- -j $(nproc) && \
+    cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . 
 
 #FROM alpine:3.14 AS sumo_if_ros_package
 
