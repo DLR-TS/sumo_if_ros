@@ -21,8 +21,8 @@
 #include "coordinate.h"
 #include <coordinate_conversion/coordinate_conversion.h>
 #include <unordered_map>
-#include <v2xsim/SimMAPEM.h>
-#include <v2xsim/SimSPATEM.h>
+#include <adore_v2x_sim/SimMAPEM.h>
+#include <adore_v2x_sim/SimSPATEM.h>
 #include <math.h>
 #include <libsumo/libsumo.h>
 namespace adore
