@@ -31,3 +31,6 @@
 	path = v2x_if_ros_msg
 	url = git@github.com:DLR-TS/v2x_if_ros_msg.git
 	branch = master
+[submodule "coordinate_conversion"]
+	path = coordinate_conversion
+	url = git@github.com:dlr-ts/coordinate_conversion
