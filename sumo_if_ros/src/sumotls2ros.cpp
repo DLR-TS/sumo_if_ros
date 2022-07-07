@@ -12,7 +12,7 @@
  *   Stephan Lapoehn - initial API and implementation
  *   Matthias Nichting - update libsumo
  ********************************************************************************/
-#include "sumotls2ros.h"
+#include <sumo_if_ros/sumotls2ros.h>
 #include <ros/console.h>
 #include <cmath>
 #include <chrono>

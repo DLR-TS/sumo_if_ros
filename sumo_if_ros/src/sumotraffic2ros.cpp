@@ -12,7 +12,7 @@
  *   Daniel Heß - initial API and implementation
  *   Matthias Nichting
  ********************************************************************************/
-#include "sumotraffic2ros.h"
+#include <sumo_if_ros/sumotraffic2ros.h>
 
 
 int main(int argc, char** argv)
