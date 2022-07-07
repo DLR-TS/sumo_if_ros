@@ -1,0 +1,7 @@
+**/build
+**/.build
+sumo_if_ros/build
+sumo/sumo/.build
+v2x_if_ros_msg/v2x_if_ros_msg/build
+**.docker_build**
+**.lizard_report.xml

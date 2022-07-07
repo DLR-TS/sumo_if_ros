@@ -1,0 +1,4 @@
+sumo_if_ros/build/*
+sumo/sumo/build/*
+
+**lizard_report.xml

@@ -1,0 +1,12 @@
+make
+cmake
+gcc 
+g++
+python3
+libgtest-dev
+python3-setuptools
+libxerces-c-dev
+libeigen3-dev
+libfreetype-dev
+ffmpeg
+libgl2ps-dev

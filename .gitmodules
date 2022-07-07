@@ -1,0 +1,29 @@
+[submodule "adore_if_ros_msg"]
+	path = adore_if_ros_msg
+	url = git@github.com:DLR-TS/adore_if_ros_msg.git
+[submodule "v2x_if_ros_msg"]
+	path = v2x_if_ros_msg
+	url = git@github.com:DLR-TS/v2x_if_ros_msg.git
+[submodule "sumo/sumo"]
+	path = sumo/sumo
+    url = https://github.com/eclipse/sumo.git
+    shallow = true
+    ignore = dirty
+[submodule "lizard_docker"]
+	path = lizard_docker
+	url = git@github.com:DLR-TS/lizard_docker.git
+	branch = master
+    shallow = true
+    ignore = dirty
+[submodule "cpplint_docker"]
+	path = cpplint_docker
+	url = git@github.com:DLR-TS/cpplint_docker.git
+	branch = master
+    shallow = true
+    ignore = dirty
+[submodule "cppcheck_docker"]
+	path = cppcheck_docker
+	url = git@github.com:DLR-TS/cppcheck_docker.git
+	branch = master
+    shallow = true
+    ignore = dirty
