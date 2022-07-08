@@ -197,7 +197,7 @@ target_include_directories(
 )
 target_link_libraries(${PROJECT_NAME}_node 
                       ${catkin_LIBRARIES} 
-                      adore_v2x_sim::adore_v2x_sim
+                      adore_v2x_sim
                       coordinate_conversion::coordinate_conversion
 )
 
