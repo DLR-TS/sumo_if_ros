@@ -28,8 +28,8 @@ WORKDIR /tmp/adore_v2x_sim/build
 RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
 
 COPY --from=sumo /tmp/sumo /tmp/sumo
-WORKDIR /tmp/sumo/build
-RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
+# WORKDIR /tmp/sumo/build
+# RUN cmake --install . --prefix /tmp/${PROJECT}/build/install
 
 COPY --from=v2x_if_ros_msg /tmp/v2x_if_ros_msg /tmp/v2x_if_ros_msg
 WORKDIR /tmp/v2x_if_ros_msg/build
@@ -64,7 +64,7 @@ WORKDIR /tmp/${PROJECT}/build
 RUN source /opt/ros/noetic/setup.bash && \
     cmake .. && \
     cmake --build . --config Release --target install -- -j $(nproc) && \
-    cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . || true
+    cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . 
 
 #FROM alpine:3.14 AS sumo_if_ros_package
 

@@ -42,6 +42,7 @@ add_library(sumo::sumo STATIC IMPORTED GLOBAL)
 set_property(TARGET sumo::sumo PROPERTY IMPORTED_LOCATION 
               ${CMAKE_CURRENT_SOURCE_DIR}/../../sumo/build/install/lib/libsumocpp.a
             )
+include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/include)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
