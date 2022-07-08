@@ -60,7 +60,7 @@ namespace adore
             std::unordered_map<std::string, adore::sumo_if_ros::MAPEMIntersection> intersections_;
 
             // MAPEM data will only be generated once, due to its static nature
-            std::unordered_map<int, v2xsim::SimMAPEM> _MAPEM;
+            std::unordered_map<int, adore_v2x_sim::SimMAPEM> _MAPEM;
 
             // one signal group for every ingress - egress lane pair 
             std::unordered_map<std::pair<std::string,std::string>, uint8_t, SumoTLs2Ros::hash_pair> sumo_signal_group_id_mapping_;
@@ -77,7 +77,7 @@ namespace adore
             std::unordered_map<std::string, adore::sumo_if_ros::MAPEMIntersection> generateMAPEMFromSUMO();
 
             // convert adore internal MAPEM representation to ROS msg
-            std::unordered_map<int, v2xsim::SimMAPEM> convertToROSMsg(std::unordered_map<std::string, adore::sumo_if_ros::MAPEMIntersection> mapem_data, double time = 0,double power = 23);
+            std::unordered_map<int, adore_v2x_sim::SimMAPEM> convertToROSMsg(std::unordered_map<std::string, adore::sumo_if_ros::MAPEMIntersection> mapem_data, double time = 0,double power = 23);
 
             // calculates the distance btw. 2 wgs84 points in m
             double wgs84_distance(double lat1, double lon1, double lat2,double lon2);
@@ -93,10 +93,10 @@ namespace adore
         public:
 
             // get MAPEM information based on sumo traffic-light 
-            std::unordered_map<int, v2xsim::SimMAPEM> getMAPEMFromSUMO(double time,double power=23);
+            std::unordered_map<int, adore_v2x_sim::SimMAPEM> getMAPEMFromSUMO(double time,double power=23);
 
             // get SPATEM information based on sumo traffic-light  
-            std::vector<v2xsim::SimSPATEM> getSPATEMFromSUMO(double time, double power=23);
+            std::vector<adore_v2x_sim::SimSPATEM> getSPATEMFromSUMO(double time, double power=23);
 
             int getIntersectionIDForSUMOString(std::string sumo_intersection_id);
 

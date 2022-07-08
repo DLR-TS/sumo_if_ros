@@ -490,9 +490,9 @@ namespace adore
                 ROS_INFO_STREAM_ONCE("-- enable spat timing: " << sumotls2ros._generate_spat_timing);
                 ROS_INFO_STREAM_ONCE("-------------------------------");
                 mapem_publisher_ =
-                    nh_->advertise<v2xsim::SimMAPEM>("/SIM/v2x/MAPEM",100);
+                    nh_->advertise<adore_v2x_sim::SimMAPEM>("/SIM/v2x/MAPEM",100);
                 spatem_publisher_ =
-                    nh_->advertise<v2xsim::SimSPATEM>("/SIM/v2x/SPATEM",100);
+                    nh_->advertise<adore_v2x_sim::SimSPATEM>("/SIM/v2x/SPATEM",100);
                 subscriber1_ = nh_->subscribe<std_msgs::Float64>("/SIM/utc", 1, &Timer::receive, &timer_);
                 subscriber2_ = nh_->subscribe<adore_if_ros_msg::TrafficParticipantSimulationConstPtr>(
                     "/SIM/traffic", 100, &ROSVehicleSet::receive, &rosVehicleSet_);
