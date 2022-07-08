@@ -17,13 +17,13 @@ RUN mkdir -p /tmp/${PROJECT}
 COPY ${PROJECT} /tmp/${PROJECT}
 
 WORKDIR /tmp/${PROJECT}
-RUN mkdir -p .build && \ 
-    cd .build && \
-    cmake .. && \
+
+RUN mkdir -p build/cmake-build && cd build/cmake-build && \
+    cmake ../.. && \
     make -j$(nproc)
 
 FROM alpine:3.14
 
 ARG PROJECT
-COPY --from=sumo_builder /tmp/${PROJECT}/.build /tmp/${PROJECT}/.build
+COPY --from=sumo_builder /tmp/${PROJECT}/build/cmake-build /tmp/${PROJECT}/build
 

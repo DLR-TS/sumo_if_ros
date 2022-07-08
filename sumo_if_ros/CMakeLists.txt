@@ -56,6 +56,7 @@ find_package(catkin REQUIRED COMPONENTS
 	its_container_v2_its_container
   coordinate_conversion
   adore_v2x_sim
+  sumocpp
 )
 
 ## System dependencies are found with CMake's conventions
@@ -199,6 +200,7 @@ target_link_libraries(${PROJECT_NAME}_node
                       ${catkin_LIBRARIES} 
                       adore_v2x_sim
                       coordinate_conversion::coordinate_conversion
+                      sumocpp
 )
 
 #############

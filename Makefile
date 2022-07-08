@@ -25,7 +25,7 @@ all: build
 .PHONY: clean
 clean:
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
-	rm -rf "${ROOT_DIR}/sumo/sumo/.build"
+	rm -rf "${ROOT_DIR}/sumo/build"
 	cd adore_if_ros_msg && make clean
 	cd adore_v2x_sim && make clean
 	docker rm $$(docker ps -a -q --filter "ancestor=${SUMO_IMAGE_NAME}") 2> /dev/null || true
@@ -51,7 +51,7 @@ build_adore_v2x_sim:
 .PHONY: build_sumo_if_ros
 build_sumo_if_ros: clean
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
-	rm -rf "${ROOT_DIR}/sumo/sumo/.build"
+	rm -rf "${ROOT_DIR}/sumo/build"
 	docker build --network host \
                  --tag $(shell echo ${TAG} | tr A-Z a-z) \
                  --build-arg PROJECT=${PROJECT} .
@@ -59,11 +59,11 @@ build_sumo_if_ros: clean
 
 .PHONY: build_sumo
 build_sumo:
-	cd "${ROOT_DIR}/sumo" && rm -rf "sumo/.build"
+	cd "${ROOT_DIR}/sumo" && rm -rf "build"
 	cd "${ROOT_DIR}/sumo" && \
 	docker build --network host \
                  --tag ${SUMO_IMAGE_NAME} .
-	cd "${ROOT_DIR}/sumo" && docker cp $$(docker create --rm ${SUMO_IMAGE_NAME}):/tmp/sumo/.build sumo/.build
+	cd "${ROOT_DIR}/sumo" && docker cp $$(docker create --rm ${SUMO_IMAGE_NAME}):/tmp/sumo/build build
 
 .PHONY: lint
 lint:
