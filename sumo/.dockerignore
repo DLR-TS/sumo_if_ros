@@ -177,3 +177,5 @@ sumo/tools/contributed/lisum/lisum-gui/target/
 sumo/tools/contributed/lisum/lisumgui/target/
 sumo/*build*
 sumo/files
+
+build
