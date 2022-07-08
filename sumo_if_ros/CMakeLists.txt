@@ -36,9 +36,13 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_v2x_sim/buil
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_if_ros_msg/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../v2x_if_ros_msg/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../coordinate_conversion/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install")
 
+add_library(sumo::sumo STATIC IMPORTED GLOBAL)
+set_property(TARGET sumo::sumo PROPERTY IMPORTED_LOCATION 
+              ${CMAKE_CURRENT_SOURCE_DIR}/../../sumo/build/install/lib/libsumocpp.a
+            )
 
-find_package(adore_v2x_sim REQUIRED)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -56,7 +60,6 @@ find_package(catkin REQUIRED COMPONENTS
 	its_container_v2_its_container
   coordinate_conversion
   adore_v2x_sim
-  sumocpp
 )
 
 ## System dependencies are found with CMake's conventions
@@ -200,7 +203,6 @@ target_link_libraries(${PROJECT_NAME}_node
                       ${catkin_LIBRARIES} 
                       adore_v2x_sim
                       coordinate_conversion::coordinate_conversion
-                      sumocpp
 )
 
 #############

@@ -49,9 +49,8 @@ build_adore_v2x_sim:
 	make
 
 .PHONY: build_sumo_if_ros
-build_sumo_if_ros: clean
+build_sumo_if_ros:
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
-	rm -rf "${ROOT_DIR}/sumo/build"
 	docker build --network host \
                  --tag $(shell echo ${TAG} | tr A-Z a-z) \
                  --build-arg PROJECT=${PROJECT} .
