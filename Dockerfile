@@ -2,7 +2,7 @@ ARG PROJECT="sumo_if_ros"
 
 FROM adore_if_ros_msg:latest AS adore_if_ros_msg
 FROM adore_v2x_sim:latest AS adore_v2x_sim
-FROM sumo:v1_8_0 as sumo
+FROM sumo:v1_13_0 as sumo
 FROM ros:noetic-ros-core-focal AS sumo_if_ros_builder
 
 ARG PROJECT

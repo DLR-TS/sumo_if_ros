@@ -2,7 +2,7 @@ SHELL:=/bin/bash
 
 .DEFAULT_GOAL := all
 
-SUMO_IMAGE_NAME="sumo:v1_8_0"
+SUMO_IMAGE_NAME="sumo:v1_13_0"
 SUMO_IF_ROS_IMAGE_NAME="sumo_if_ros:latest"
 PROJECT="sumo_if_ros"
 VERSION="latest"
