@@ -22,6 +22,9 @@ RUN mkdir -p build/cmake-build && cd build/cmake-build && \
     cmake ../.. && \
     make -j$(nproc)
 
+RUN mkdir -p build/cmake-build/include/libsumo && \
+    cp src/libsumo/*.h build/cmake-build/include/libsumo/
+
 FROM alpine:3.14
 
 ARG PROJECT
