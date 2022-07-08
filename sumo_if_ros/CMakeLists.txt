@@ -32,11 +32,13 @@ set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL NO)
 
 
 list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_v2x_sim/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_if_ros_msg/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../v2x_if_ros_msg/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../coordinate_conversion/build/install")
 
 
+find_package(adore_v2x_sim REQUIRED)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -53,6 +55,7 @@ find_package(catkin REQUIRED COMPONENTS
 	dsrc_v2_spatem_pdu_descriptions
 	its_container_v2_its_container
   coordinate_conversion
+  adore_v2x_sim
 )
 
 ## System dependencies are found with CMake's conventions
@@ -194,6 +197,7 @@ target_include_directories(
 )
 target_link_libraries(${PROJECT_NAME}_node 
                       ${catkin_LIBRARIES} 
+                      adore_v2x_sim::adore_v2x_sim
                       coordinate_conversion::coordinate_conversion
 )
 
