@@ -92,7 +92,7 @@ double SumoTLs2Ros::getSystemTime()
 }
 
 
-std::unordered_map<int, v2xsim::SimMAPEM> SumoTLs2Ros::getMAPEMFromSUMO(double time,double power)
+std::unordered_map<int, adore_v2x_sim::SimMAPEM> SumoTLs2Ros::getMAPEMFromSUMO(double time,double power)
 {
     if (intersections_.size() == 0)
     {
@@ -119,10 +119,10 @@ std::unordered_map<int, v2xsim::SimMAPEM> SumoTLs2Ros::getMAPEMFromSUMO(double t
 }
 
 
-std::unordered_map<int, v2xsim::SimMAPEM> SumoTLs2Ros::convertToROSMsg(
+std::unordered_map<int, adore_v2x_sim::SimMAPEM> SumoTLs2Ros::convertToROSMsg(
     std::unordered_map<std::string, adore::sumo_if_ros::MAPEMIntersection> mapem_data, double time, double power)
 {
-    std::unordered_map<int, v2xsim::SimMAPEM> mapem_ros_msgs;
+    std::unordered_map<int, adore_v2x_sim::SimMAPEM> mapem_ros_msgs;
 
     int messageID = 0;
 
@@ -130,7 +130,7 @@ std::unordered_map<int, v2xsim::SimMAPEM> SumoTLs2Ros::convertToROSMsg(
     {
         auto mapem = item.second;
 
-        v2xsim::SimMAPEM ros_mapem;
+        adore_v2x_sim::SimMAPEM ros_mapem;
 
         // -----------  header -----------------------------
         ros_mapem.data.header.messageID.value = 5;
@@ -543,7 +543,7 @@ int32_t SumoTLs2Ros::getMOY(double time)
     return (int32_t) (getSecondOfYearFromUTC(time) / 60.0);
 }
 
-std::vector<v2xsim::SimSPATEM> SumoTLs2Ros::getSPATEMFromSUMO(double time, double power)
+std::vector<adore_v2x_sim::SimSPATEM> SumoTLs2Ros::getSPATEMFromSUMO(double time, double power)
 {
     if(_use_system_time)
         time = getSystemTime();
@@ -552,7 +552,7 @@ std::vector<v2xsim::SimSPATEM> SumoTLs2Ros::getSPATEMFromSUMO(double time, doubl
     getMAPEMFromSUMO(time);
 
     auto tl_id_list = libsumo::TrafficLight::getIDList();
-    std::vector<v2xsim::SimSPATEM> spatem_list;
+    std::vector<adore_v2x_sim::SimSPATEM> spatem_list;
 
     // time calculations
     double seconds_of_year = getSecondOfYearFromUTC(time);
@@ -591,7 +591,7 @@ std::vector<v2xsim::SimSPATEM> SumoTLs2Ros::getSPATEMFromSUMO(double time, doubl
         double next_switch = libsumo::TrafficLight::getNextSwitch(i);
         double remaining_duration_of_phase = libsumo::TrafficLight::getNextSwitch(i) - libsumo::Simulation::getTime();
 
-        v2xsim::SimSPATEM spatem;
+        adore_v2x_sim::SimSPATEM spatem;
         int intersection_id = getIntersectionIDForSUMOString(i);
 
         /*  ----- Meta ------ */
