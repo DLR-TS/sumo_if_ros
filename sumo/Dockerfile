@@ -22,8 +22,19 @@ RUN mkdir -p build/cmake-build && cd build/cmake-build && \
     cmake ../.. && \
     make -j$(nproc)
 
-RUN mkdir -p build/cmake-build/include/libsumo && \
-    cp src/libsumo/*.h build/cmake-build/include/libsumo/
+# copy headers to include folder
+RUN mkdir -p build/cmake-build/install/include/libsumo && \
+    cp src/libsumo/*.h build/cmake-build/install/include/libsumo/
+#bundle o files int a static library a file
+RUN cd build/cmake-build/src/libsumo/CMakeFiles/libsumostatic.dir && \
+    ar rc libsumocpp.a *.o
+#create lib folder and copy the a file into lib
+RUN mkdir -p build/cmake-build/install/lib &&  \
+    cp build/cmake-build/src/libsumo/CMakeFiles/libsumostatic.dir/*.a \
+       build/cmake-build/install/lib
+#copy share library so to lib folder
+RUN cp bin/libsumocpp.so \ 
+       build/cmake-build/install/lib
 
 FROM alpine:3.14
 
