@@ -38,10 +38,14 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../v2x_if_ros_msg/bui
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../coordinate_conversion/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install")
 
-add_library(sumo::sumo STATIC IMPORTED GLOBAL)
-set_property(TARGET sumo::sumo PROPERTY IMPORTED_LOCATION 
-              ${CMAKE_CURRENT_SOURCE_DIR}/../../sumo/build/install/lib/libsumocpp.a
-            )
+# add_library(sumo::sumo SHARED IMPORTED GLOBAL)
+# set_property(TARGET sumo::sumo PROPERTY IMPORTED_LOCATION 
+#               ${CMAKE_CURRENT_SOURCE_DIR}/../../sumo/build/install/lib/libsumocpp.so
+#             )
+find_library(sumocpp_library REQUIRED
+        NAMES sumocpp
+        HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
+        )
 include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/include)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -200,10 +204,13 @@ target_include_directories(
   ${sumo_src_dir}
   ${catkin_INCLUDE_DIRS}
 )
+set_target_properties(${PROJECT_NAME}_node PROPERTIES
+    INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
+    BUILD_WITH_INSTALL_RPATH 1)
 target_link_libraries(${PROJECT_NAME}_node 
                       ${catkin_LIBRARIES} 
-                      adore_v2x_sim
                       coordinate_conversion::coordinate_conversion
+                      ${sumocpp_library}
 )
 
 #############

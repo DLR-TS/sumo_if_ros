@@ -32,7 +32,7 @@ RUN cd build/cmake-build/src/libsumo/CMakeFiles/libsumostatic.dir && \
 RUN mkdir -p build/cmake-build/install/lib &&  \
     cp build/cmake-build/src/libsumo/CMakeFiles/libsumostatic.dir/*.a \
        build/cmake-build/install/lib
-#copy share library so to lib folder
+#copy bin files to lib folder
 RUN cp bin/libsumocpp.so \ 
        build/cmake-build/install/lib
 
