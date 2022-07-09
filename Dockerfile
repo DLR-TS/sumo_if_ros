@@ -66,10 +66,10 @@ RUN source /opt/ros/noetic/setup.bash && \
     cmake --build . --config Release --target install -- -j $(nproc) && \
     cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t .
 
-#FROM alpine:3.14 AS sumo_if_ros_package
+FROM alpine:3.14 AS sumo_if_ros_package
 
-#ARG PROJECT
+ARG PROJECT
 
-#COPY --from=sumo_if_ros_builder /tmp/${PROJECT}/build /tmp/${PROJECT}/build
+COPY --from=sumo_if_ros_builder /tmp/${PROJECT}/build /tmp/${PROJECT}/build
 
 
