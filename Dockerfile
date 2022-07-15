@@ -62,7 +62,7 @@ WORKDIR /tmp/${PROJECT}/build
 #    cmake --build . --config Release --target install -- -j $(nproc)
 
 RUN source /opt/ros/noetic/setup.bash && \
-    cmake .. && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release && \
     cmake --build . --config Release --target install -- -j $(nproc) && \
     cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t .
 
