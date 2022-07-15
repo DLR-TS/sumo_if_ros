@@ -62,9 +62,10 @@ WORKDIR /tmp/${PROJECT}/build
 #    cmake --build . --config Release --target install -- -j $(nproc)
 
 RUN source /opt/ros/noetic/setup.bash && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="install" && \
     cmake --build . --config Release --target install -- -j $(nproc) && \
-    cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t .
+    cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . && \
+    cp -r /tmp/${PROJECT}/build/devel/lib/${PROJECT} /tmp/${PROJECT}/build/install/lib/${PROJECT}
 
 FROM alpine:3.14 AS sumo_if_ros_package
 

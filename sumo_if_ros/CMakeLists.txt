@@ -207,6 +207,8 @@ target_include_directories(
 set_target_properties(${PROJECT_NAME}_node PROPERTIES
     INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
     BUILD_WITH_INSTALL_RPATH 1)
+
+
 target_link_libraries(${PROJECT_NAME}_node 
                       ${catkin_LIBRARIES} 
                       coordinate_conversion::coordinate_conversion
@@ -232,12 +234,13 @@ target_link_libraries(${PROJECT_NAME}_node
 # install(TARGETS ${PROJECT_NAME}_node
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS
+            ${PROJECT_NAME}
+            ${PROJECT_NAME}_node
         EXPORT ${PROJECT_NAME}_Targets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 include(CMakePackageConfigHelpers)
 
