@@ -26,8 +26,9 @@ all: build
 clean:
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	rm -rf "${ROOT_DIR}/sumo/build"
-	cd adore_if_ros_msg && make clean
 	cd adore_v2x_sim && make clean
+	cd coordinate_conversion && make clean
+	cd adore_if_ros_msg && make clean
 	docker rm $$(docker ps -a -q --filter "ancestor=${SUMO_IMAGE_NAME}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${SUMO_IMAGE_NAME}) 2> /dev/null || true
 	docker rmi ${SUMO_IMAGE_NAME} --force 2> /dev/null
@@ -48,8 +49,13 @@ build_adore_v2x_sim:
 	cd "${ROOT_DIR}/adore_v2x_sim" && \
 	make
 
+.PHONY: build_coordinate_conversion
+build_coordinate_conversion:
+	cd "${ROOT_DIR}/coordinate_conversion" && \
+	make
+
 .PHONY: build_sumo_if_ros
-build_sumo_if_ros:
+build_sumo_if_ros: build_adore_if_ros_msg build_coordinate_conversion build_adore_v2x_sim
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	docker build --network host \
                  --tag $(shell echo ${TAG} | tr A-Z a-z) \
