@@ -42,10 +42,11 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install
 # set_property(TARGET sumo::sumo PROPERTY IMPORTED_LOCATION 
 #               ${CMAKE_CURRENT_SOURCE_DIR}/../../sumo/build/install/lib/libsumocpp.so
 #             )
-find_library(sumocpp_library REQUIRED
-        NAMES sumocpp
-        HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
-        )
+find_library(
+    sumocpp_library REQUIRED
+    NAMES sumocpp
+    HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
+)
 include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/include)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
