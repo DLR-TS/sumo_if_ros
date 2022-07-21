@@ -1,3 +1,4 @@
+include make_gadgets/Makefile
 SHELL:=/bin/bash
 
 .DEFAULT_GOAL := all
@@ -15,15 +16,11 @@ MAKEFLAGS += --no-print-directory
 DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?=
 
-.PHONY: help
-help:
-	@awk 'BEGIN {FS = ":.*##"; printf "Usage: make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
-
 .PHONY: all
-all: build
+all: root_check docker_group_check build
 
 .PHONY: clean
-clean:
+clean: ## Cleans the build artifacts 
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	rm -rf "${ROOT_DIR}/sumo/build"
 	cd adore_v2x_sim && make clean
@@ -37,7 +34,7 @@ clean:
 	docker rmi ${TAG} --force 2> /dev/null
 
 .PHONY: build
-build: clean build_adore_if_ros_msg  build_adore_v2x_sim build_sumo build_sumo_if_ros
+build: clean build_adore_if_ros_msg  build_adore_v2x_sim build_sumo build_sumo_if_ros ## Build sumo_if_ros
 
 .PHONY: build_adore_if_ros_msg
 build_adore_if_ros_msg:
@@ -71,12 +68,12 @@ build_sumo:
 	cd "${ROOT_DIR}/sumo" && docker cp $$(docker create --rm ${SUMO_IMAGE_NAME}):/tmp/sumo/build build
 
 .PHONY: lint
-lint:
+lint: ## Print out lint report to console
 	cd cpplint_docker && \
         make lint CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
 
 .PHONY: lintfix 
-lintfix:
+lintfix: ## Automated lint fixing of sumo_if_ros source code using clang-format
 	cd cpplint_docker && \
         make lintfix CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
 
@@ -87,11 +84,11 @@ lintfix_simulate:
 
 
 .PHONY: cppcheck 
-cppcheck:
+cppcheck: ## Print out cppcheck static analysis report of the sumo_if_ros source code.
 	cd cppcheck_docker && \
         make cppcheck CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
 
 .PHONY: lizard 
-lizard:
+lizard: ## Print out lizard static analysis report of the sumo_if_ros source code.
 	cd lizard_docker && \
         make lizard CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
