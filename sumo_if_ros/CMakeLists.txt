@@ -62,8 +62,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   adore_if_ros_msg
   dsrc_v2_mapem_pdu_descriptions
-	dsrc_v2_spatem_pdu_descriptions
-	its_container_v2_its_container
+  dsrc_v2_spatem_pdu_descriptions
+  its_container_v2_its_container
   coordinate_conversion
   adore_v2x_sim
 )
@@ -205,15 +205,18 @@ target_include_directories(
   ${sumo_src_dir}
   ${catkin_INCLUDE_DIRS}
 )
-set_target_properties(${PROJECT_NAME}_node PROPERTIES
+set_target_properties(
+    ${PROJECT_NAME}_node PROPERTIES
     INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
-    BUILD_WITH_INSTALL_RPATH 1)
+    BUILD_WITH_INSTALL_RPATH 1
+)
 
 
-target_link_libraries(${PROJECT_NAME}_node 
-                      ${catkin_LIBRARIES} 
-                      coordinate_conversion::coordinate_conversion
-                      ${sumocpp_library}
+target_link_libraries(
+    ${PROJECT_NAME}_node 
+    ${catkin_LIBRARIES} 
+    coordinate_conversion::coordinate_conversion
+    ${sumocpp_library}
 )
 
 #############
@@ -266,37 +269,3 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/build/install/include DESTINATION .) 
 
-## Mark libraries for installation
-## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-# install(TARGETS ${PROJECT_NAME}
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-# )
-
-## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
-
-## Mark other files for installation (e.g. launch and bag files, etc.)
-# install(FILES
-#   # myfile1
-#   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-
-#############
-## Testing ##
-#############
-
-## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_sumo_if_ros.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
-
-## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
