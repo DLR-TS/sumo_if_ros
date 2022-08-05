@@ -24,8 +24,8 @@ clean: ## Cleans the build artifacts
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	rm -rf "${ROOT_DIR}/sumo/build"
 	find . -name "**lizard_report.xml" -exec rm -rf {} \;
-	find . -name "**cppcheck.log" -exec rm -rf {} \;
-	find . -name "**lint.log" -exec rm -rf {} \;
+	find . -name "**cppcheck_report.log" -exec rm -rf {} \;
+	find . -name "**lint_report.log" -exec rm -rf {} \;
 	cd adore_v2x_sim && make clean
 	cd coordinate_conversion && make clean
 	cd v2x_if_ros_msg && make clean
@@ -78,9 +78,10 @@ build_sumo:
 
 .PHONY: lint
 lint: ## Print out lint report to console
+	find . -name "**lint_report.log" -exec rm -rf {} \;
 	cd cpplint_docker && \
     make lint CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros) | \
-	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_lint.log; exit $$PIPESTATUS
+	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_lint_report.log; exit $$PIPESTATUS
 
 .PHONY: lintfix 
 lintfix: ## Automated lint fixing of sumo_if_ros source code using clang-format
@@ -95,9 +96,10 @@ lintfix_simulate:
 
 .PHONY: cppcheck 
 cppcheck: ## Print out cppcheck static analysis report of the sumo_if_ros source code.
+	find . -name "**cppcheck_report.log" -exec rm -rf {} \;
 	cd cppcheck_docker && \
     make cppcheck CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/sumo_if_ros) | \
-	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_cppcheck.log; exit $$PIPESTATUS
+	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_cppcheck_report.log; exit $$PIPESTATUS
 
 .PHONY: lizard 
 lizard: ## Print out lizard static analysis report of the sumo_if_ros source code.
@@ -105,3 +107,6 @@ lizard: ## Print out lizard static analysis report of the sumo_if_ros source cod
 	cd lizard_docker && \
     make lizard CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/sumo_if_ros)
 	find . -name "**lizard_report.xml" -print0 | xargs -0 -I {} mv {} sumo_if_ros/sumo_if_ros_lizard_report.xml
+
+.PHONY: static_checks
+static_checks: lizard cppcheck lint

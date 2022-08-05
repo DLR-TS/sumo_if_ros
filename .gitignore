@@ -2,5 +2,5 @@ sumo_if_ros/build/*
 sumo/sumo/build/*
 
 **lizard_report.xml
-**cppcheck.log
-**lint.log
+**cppcheck_report.log
+**lint_report.log
