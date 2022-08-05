@@ -1,4 +1,8 @@
 include make_gadgets/Makefile
+include cppcheck_docker/Makefile.cppcheck_target
+include cpplint_docker/Makefile.cpplint_target
+include lizard_docker/Makefile.lizard_target
+
 SHELL:=/bin/bash
 
 .DEFAULT_GOAL := all
@@ -75,39 +79,6 @@ build_sumo:
 	docker build --network host \
                  --tag ${SUMO_IMAGE_NAME} .
 	cd "${ROOT_DIR}/sumo" && docker cp $$(docker create --rm ${SUMO_IMAGE_NAME}):/tmp/sumo/build build
-
-.PHONY: lint
-lint: ## Print out lint report to console
-	find . -name "**lint_report.log" -exec rm -rf {} \;
-	cd cpplint_docker && \
-    make lint CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros) | \
-	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_lint_report.log; exit $$PIPESTATUS
-
-.PHONY: lintfix 
-lintfix: ## Automated lint fixing of sumo_if_ros source code using clang-format
-	cd cpplint_docker && \
-    make lintfix CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
-
-.PHONY: lintfix_simulate
-lintfix_simulate:
-	cd cpplint_docker && \
-    make lintfix_simulate CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
-
-
-.PHONY: cppcheck 
-cppcheck: ## Print out cppcheck static analysis report of the sumo_if_ros source code.
-	find . -name "**cppcheck_report.log" -exec rm -rf {} \;
-	cd cppcheck_docker && \
-    make cppcheck CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/sumo_if_ros) | \
-	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_cppcheck_report.log; exit $$PIPESTATUS
-
-.PHONY: lizard 
-lizard: ## Print out lizard static analysis report of the sumo_if_ros source code.
-	find . -name "**lizard_report.**" -exec rm -rf {} \;
-	cd lizard_docker && \
-    (make lizard CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/${PROJECT}) | \
-    tee ${ROOT_DIR}/${PROJECT}/${PROJECT}_lizard_report.log)
-	find . -name "**lizard_report.xml**" -print0 | xargs -0 -I {} mv {} ${PROJECT}/${PROJECT}_lizard_report.xml
 
 .PHONY: static_checks
 static_checks: lizard cppcheck lint
