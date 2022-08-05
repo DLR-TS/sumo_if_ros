@@ -23,6 +23,7 @@ all: root_check docker_group_check build
 clean: ## Cleans the build artifacts 
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	rm -rf "${ROOT_DIR}/sumo/build"
+	find . -name "**lizard_report.xml" -exec rm -rf {} \;
 	cd adore_v2x_sim && make clean
 	cd coordinate_conversion && make clean
 	cd adore_if_ros_msg && make clean
@@ -90,5 +91,7 @@ cppcheck: ## Print out cppcheck static analysis report of the sumo_if_ros source
 
 .PHONY: lizard 
 lizard: ## Print out lizard static analysis report of the sumo_if_ros source code.
+	find . -name "**lizard_report.xml" -exec rm -rf {} \;
 	cd lizard_docker && \
-        make lizard CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
+    make lizard CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
+	find . -name "**lizard_report.xml" -print0 | xargs -0 -I {} mv {} sumo_if_ros/sumo_if_ros_lizard_report.xml
