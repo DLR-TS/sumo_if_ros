@@ -103,10 +103,11 @@ cppcheck: ## Print out cppcheck static analysis report of the sumo_if_ros source
 
 .PHONY: lizard 
 lizard: ## Print out lizard static analysis report of the sumo_if_ros source code.
-	find . -name "**lizard_report.xml" -exec rm -rf {} \;
+	find . -name "**lizard_report.**" -exec rm -rf {} \;
 	cd lizard_docker && \
-    make lizard CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/sumo_if_ros)
-	find . -name "**lizard_report.xml" -print0 | xargs -0 -I {} mv {} sumo_if_ros/sumo_if_ros_lizard_report.xml
+    (make lizard CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/${PROJECT}) | \
+    tee ${ROOT_DIR}/${PROJECT}/${PROJECT}_lizard_report.log)
+	find . -name "**lizard_report.xml**" -print0 | xargs -0 -I {} mv {} ${PROJECT}/${PROJECT}_lizard_report.xml
 
 .PHONY: static_checks
 static_checks: lizard cppcheck lint
