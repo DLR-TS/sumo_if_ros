@@ -24,8 +24,11 @@ clean: ## Cleans the build artifacts
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	rm -rf "${ROOT_DIR}/sumo/build"
 	find . -name "**lizard_report.xml" -exec rm -rf {} \;
+	find . -name "**cppcheck.log" -exec rm -rf {} \;
+	find . -name "**lint.log" -exec rm -rf {} \;
 	cd adore_v2x_sim && make clean
 	cd coordinate_conversion && make clean
+	cd v2x_if_ros_msg && make clean
 	cd adore_if_ros_msg && make clean
 	docker rm $$(docker ps -a -q --filter "ancestor=${SUMO_IMAGE_NAME}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${SUMO_IMAGE_NAME}) 2> /dev/null || true
@@ -35,11 +38,16 @@ clean: ## Cleans the build artifacts
 	docker rmi ${TAG} --force 2> /dev/null
 
 .PHONY: build
-build: clean build_adore_if_ros_msg  build_adore_v2x_sim build_sumo build_sumo_if_ros ## Build sumo_if_ros
+build: clean build_adore_if_ros_msg  build_v2x_if_ros_msg build_adore_v2x_sim build_sumo build_sumo_if_ros ## Build sumo_if_ros
 
 .PHONY: build_adore_if_ros_msg
 build_adore_if_ros_msg:
 	cd "${ROOT_DIR}/adore_if_ros_msg" && \
+	make
+
+.PHONY: build_v2x_if_ros_msg
+build_v2x_if_ros_msg:
+	cd "${ROOT_DIR}/v2x_if_ros_msg" && \
 	make
 
 .PHONY: build_adore_v2x_sim
@@ -71,27 +79,29 @@ build_sumo:
 .PHONY: lint
 lint: ## Print out lint report to console
 	cd cpplint_docker && \
-        make lint CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
+    make lint CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros) | \
+	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_lint.log; exit $$PIPESTATUS
 
 .PHONY: lintfix 
 lintfix: ## Automated lint fixing of sumo_if_ros source code using clang-format
 	cd cpplint_docker && \
-        make lintfix CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
+    make lintfix CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
 
 .PHONY: lintfix_simulate
 lintfix_simulate:
 	cd cpplint_docker && \
-        make lintfix_simulate CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
+    make lintfix_simulate CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
 
 
 .PHONY: cppcheck 
 cppcheck: ## Print out cppcheck static analysis report of the sumo_if_ros source code.
 	cd cppcheck_docker && \
-        make cppcheck CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
+    make cppcheck CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/sumo_if_ros) | \
+	tee ${ROOT_DIR}/sumo_if_ros/sumo_if_ros_cppcheck.log; exit $$PIPESTATUS
 
 .PHONY: lizard 
 lizard: ## Print out lizard static analysis report of the sumo_if_ros source code.
 	find . -name "**lizard_report.xml" -exec rm -rf {} \;
 	cd lizard_docker && \
-    make lizard CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/sumo_if_ros)
+    make lizard CPP_PROJECT_DIRECTORY=$$(realpath ${ROOT_DIR}/sumo_if_ros)
 	find . -name "**lizard_report.xml" -print0 | xargs -0 -I {} mv {} sumo_if_ros/sumo_if_ros_lizard_report.xml
