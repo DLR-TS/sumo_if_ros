@@ -13,7 +13,7 @@ PROJECT="sumo_if_ros"
 VERSION="latest"
 TAG="${PROJECT}:${VERSION}"
 
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
 
 MAKEFLAGS += --no-print-directory
 .EXPORT_ALL_VARIABLES:
@@ -70,7 +70,7 @@ build_sumo_if_ros: build_adore_if_ros_msg build_coordinate_conversion build_ador
 	docker build --network host \
                  --tag $(shell echo ${TAG} | tr A-Z a-z) \
                  --build-arg PROJECT=${PROJECT} .
-	docker cp $$(docker create --rm ${TAG}):/tmp/${PROJECT}/build ${ROOT_DIR}/${PROJECT}
+	docker cp $$(docker create --rm ${TAG}):/tmp/${PROJECT}/build "${ROOT_DIR}/${PROJECT}"
 
 .PHONY: build_sumo
 build_sumo:
