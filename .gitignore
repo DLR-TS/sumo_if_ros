@@ -4,3 +4,5 @@ sumo/sumo/build/*
 **lizard_report.**
 **cppcheck_report.log
 **lint_report.log
+
+sumo_if_ros/cmake-build/

@@ -7,3 +7,10 @@ v2x_if_ros_msg/v2x_if_ros_msg/build
 **lizard_report.**
 **cppcheck.log
 **lint.log
+
+sumo_if_ros/cmake-build/
+
+cppcheck_docker
+lizard_docker
+cpplint_docker
+make_gadgets

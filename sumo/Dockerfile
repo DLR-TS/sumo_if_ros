@@ -20,7 +20,8 @@ WORKDIR /tmp/${PROJECT}
 
 RUN mkdir -p build/cmake-build && cd build/cmake-build && \
     cmake ../.. && \
-    make -j$(nproc)
+    make -j$(nproc) && \
+    mv CMakeCache.txt CMakeCache.txt.build
 
 # copy headers to include folder
 RUN mkdir -p build/cmake-build/install/include/libsumo && \

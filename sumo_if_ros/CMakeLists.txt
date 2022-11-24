@@ -30,24 +30,40 @@ include(Packing)
 
 set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL NO)
 
-
 list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_v2x_sim/build/install")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../adore_if_ros_msg/build/install")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../v2x_if_ros_msg/build/install")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../coordinate_conversion/build/install")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install")
+
+set(sumo_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../sumo/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${sumo_CMAKE_INSTALL_PATH}")
+
+set(adore_v2x_sim_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../adore_v2x_sim/adore_v2x_sim/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${adore_v2x_sim_CMAKE_INSTALL_PATH}")
+
+set(adore_if_ros_msg_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../adore_if_ros_msg/adore_if_ros_msg/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${adore_if_ros_msg_CMAKE_INSTALL_PATH}")
+
+set(v2x_if_ros_msg_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../v2x_if_ros_msg/v2x_if_ros_msg/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${v2x_if_ros_msg_CMAKE_INSTALL_PATH}")
+
+set(coordinate_conversion_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../coordinate_conversion/coordinate_conversion/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${coordinate_conversion_CMAKE_INSTALL_PATH}")
+
+find_package(adore_if_ros_msg CONFIG REQUIRED)
+#find_package(SUMO CONFIG REQUIRED)
+#find_package(v2x_if_ros_msg CONFIG REQUIRED)
+find_package(coordinate_conversion CONFIG REQUIRED)
+find_package(adore_v2x_sim CONFIG REQUIRED)
 
 # add_library(sumo::sumo SHARED IMPORTED GLOBAL)
 # set_property(TARGET sumo::sumo PROPERTY IMPORTED_LOCATION 
 #               ${CMAKE_CURRENT_SOURCE_DIR}/../../sumo/build/install/lib/libsumocpp.so
 #             )
+
 find_library(
     sumocpp_library REQUIRED
     NAMES sumocpp
-    HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
+    HINTS "${sumo_CMAKE_INSTALL_PATH}/lib"
 )
-include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/include)
+include_directories(${PROJECT_NAME} PRIVATE ${sumo_CMAKE_INSTALL_PATH}/include)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -207,7 +223,7 @@ target_include_directories(
 )
 set_target_properties(
     ${PROJECT_NAME}_node PROPERTIES
-    INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/../sumo/build/install/lib"
+    INSTALL_RPATH "${sumo_CMAKE_INSTALL_PATH}/lib"
     BUILD_WITH_INSTALL_RPATH 1
 )
 
