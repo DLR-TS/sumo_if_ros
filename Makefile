@@ -15,6 +15,8 @@ include sumo_if_ros.mk
 DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?= 
 
+include adore_if_ros_msg/adore_if_ros_msg.mk
+
 REPO_DIRECTORY:="${ROOT_DIR}"
 
 SUMO_PROJECT:="sumo"
@@ -37,7 +39,10 @@ set_env:
 	$(eval TAG := ${SUMO_IF_ROS_TAG})
 
 .PHONY: clean_submodules
-clean_submodules: clean_adore_if_ros_msg clean_adore_v2x_sim clean_coordinate_conversion 
+clean_submodules:
+	cd adore_if_ros_msg && make clean
+	cd coordinate_conversion && make clean
+	cd adore_v2x_sim && make clean
 
 .PHONY: clean
 clean: set_env ## Clean sumo_if_ros build artifacts
