@@ -39,6 +39,10 @@ SUMO_IF_ROS_CMAKE_INSTALL_PATH:="${SUMO_IF_ROS_CMAKE_BUILD_PATH}/install"
 
 include ${MAKE_GADGETS_PATH}/make_gadgets.mk
 include ${MAKE_GADGETS_PATH}/docker/docker-tools.mk
+
+include ${SUMO_IF_ROS_SUBMODULES_PATH}/cpplint_docker/cpplint_docker.mk
+
+
 include ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_v2x_sim/adore_v2x_sim.mk
 include ${SUMO_IF_ROS_SUBMODULES_PATH}/coordinate_conversion/coordinate_conversion.mk
 include ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_if_ros_msg/adore_if_ros_msg.mk
