@@ -7,17 +7,11 @@ MAKEFILE_PATH:=$(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST)"))")
 
 MAKEFLAGS += --no-print-directory
 
-include coordinate_conversion/make_gadgets/make_gadgets.mk
-include coordinate_conversion/make_gadgets/docker/docker-tools.mk
 include sumo_if_ros.mk
 
 .EXPORT_ALL_VARIABLES:
 DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?= 
-
-include adore_if_ros_msg/adore_if_ros_msg.mk
-
-REPO_DIRECTORY:="${ROOT_DIR}"
 
 SUMO_PROJECT:="sumo"
 SUMO_TAG:="v1_13_0"
@@ -27,9 +21,6 @@ SUMO_IMAGE_NAME:="${SUMO_PROJECT}:${SUMO_TAG}"
 PROJECT:=${SUMO_IF_ROS_PROJECT}
 TAG:=${SUMO_IF_ROS_TAG}
 
-include adore_if_ros_msg/adore_if_ros_msg.mk
-include coordinate_conversion/coordinate_conversion.mk
-
 .PHONY: all
 all: root_check docker_group_check build
 
@@ -38,14 +29,20 @@ set_env:
 	$(eval PROJECT := ${SUMO_IF_ROS_PROJECT}) 
 	$(eval TAG := ${SUMO_IF_ROS_TAG})
 
+.PHONY: init_sumo_submodule
+init_sumo_submodule:
+	git submodule update --init --recursive --depth 1 sumo/sumo
+
 .PHONY: clean_submodules
 clean_submodules:
-	cd adore_if_ros_msg && make clean
-	cd coordinate_conversion && make clean
-	cd adore_v2x_sim && make clean
+	$(eval MAKE_GADGETS_MAKEFILE_PATH := $(shell unset MAKE_GADGETS_MAKEFILE_PATH))
+	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_if_ros_msg && make clean
+	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/coordinate_conversion && make clean
+	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_v2x_sim && make clean
 
 .PHONY: clean
 clean: set_env ## Clean sumo_if_ros build artifacts
+	$(eval MAKE_GADGETS_MAKEFILE_PATH := $(shell unset MAKE_GADGETS_MAKEFILE_PATH))
 	make clean_submodules
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	rm -rf "${ROOT_DIR}/sumo/build"
@@ -60,7 +57,11 @@ clean: set_env ## Clean sumo_if_ros build artifacts
 	docker rmi $$(docker images -q ${PROJECT}:${TAG}) 2> /dev/null || true
 
 .PHONY: build
-build: set_env build_adore_if_ros_msg build_coordinate_conversion build_adore_v2x_sim build_sumo ## Build sumo_if_ros
+build: set_env ## Build sumo_if_ros
+	$(eval MAKE_GADGETS_MAKEFILE_PATH := $(shell unset MAKE_GADGETS_MAKEFILE_PATH))
+	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_if_ros_msg && make build 
+	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_v2x_sim && make build 
+	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/coordinate_conversion && make build 
 	docker build --network host \
                  --tag ${PROJECT}:${TAG} \
                  --build-arg PROJECT=${PROJECT} \
