@@ -7,7 +7,7 @@ MAKEFILE_PATH:=$(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST)"))")
 
 MAKEFLAGS += --no-print-directory
 
-$(shell git submodule update --init --recursive --depth 1 ${ROOT_DIR}/sumo/*)
+$(shell git git submodule update --init --recursive --remote --depth 1 --jobs 4 --single-branch ${ROOT_DIR}/sumo/*)
 
 include sumo_if_ros.mk
 
@@ -59,7 +59,10 @@ clean: set_env ## Clean sumo_if_ros build artifacts
 	docker rmi $$(docker images -q ${PROJECT}:${TAG}) 2> /dev/null || true
 
 .PHONY: build
-build: set_env build_sumo ## Build sumo_if_ros
+build: set_env start_apt_cacher_ng _build get_cache_statistics ## Build sumo_if_ros 
+
+.PHONY: _build
+_build: set_env build_sumo
 	$(eval MAKE_GADGETS_MAKEFILE_PATH := $(shell unset MAKE_GADGETS_MAKEFILE_PATH))
 	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_if_ros_msg && make build 
 	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_v2x_sim && make build 
