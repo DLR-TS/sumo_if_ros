@@ -36,6 +36,7 @@ SUMO_IF_ROS_IMAGE:=${SUMO_IF_ROS_PROJECT}:${SUMO_IF_ROS_TAG}
 
 SUMO_IF_ROS_CMAKE_BUILD_PATH:="${SUMO_IF_ROS_PROJECT}/build"
 SUMO_IF_ROS_CMAKE_INSTALL_PATH:="${SUMO_IF_ROS_CMAKE_BUILD_PATH}/install"
+SUMO_IF_ROS_CMAKE_INSTALL_PATH:="${SUMO_IF_ROS_CMAKE_BUILD_PATH}/install"
 
 include ${MAKE_GADGETS_PATH}/make_gadgets.mk
 include ${MAKE_GADGETS_PATH}/docker/docker-tools.mk
@@ -64,9 +65,5 @@ branch_sumo_if_ros: ## Returns the current docker safe/sanitized branch for sumo
 .PHONY: image_sumo_if_ros
 image_sumo_if_ros: ## Returns the current docker image name for sumo_if_ros
 	@printf "%s\n" ${sumo_if_ros_image}
-
-.PHONY: update_sumo_if_ros
-update_sumo_if_ros:
-	cd "${sumo_if_ros_MAKEFILE_PATH}" && git pull
 
 endif

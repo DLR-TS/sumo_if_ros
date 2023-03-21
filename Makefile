@@ -7,7 +7,7 @@ MAKEFILE_PATH:=$(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST)"))")
 
 MAKEFLAGS += --no-print-directory
 
-$(shell git git submodule update --init --recursive --remote --depth 1 --jobs 4 --single-branch ${ROOT_DIR}/sumo/*)
+$(shell git submodule update --init --recursive --remote --depth 1 --jobs 4 --single-branch ${ROOT_DIR}/sumo/*)
 
 include sumo_if_ros.mk
 
