@@ -29,7 +29,6 @@ else
     SUMO_IF_ROS_SUBMODULES_PATH:=$(shell realpath ${SUBMODULES_PATH})
 endif
 REPO_DIRECTORY:=${SUMO_IF_ROS_MAKEFILE_PATH}
-CPP_PROJECT_DIRECTORY:=${REPO_DIRECTORY}/${SUMO_IF_ROS_PROJECT}
 
 SUMO_IF_ROS_TAG:=$(shell cd "${MAKE_GADGETS_PATH}" && make get_sanitized_branch_name REPO_DIRECTORY="${REPO_DIRECTORY}")
 SUMO_IF_ROS_IMAGE:=${SUMO_IF_ROS_PROJECT}:${SUMO_IF_ROS_TAG}
@@ -49,6 +48,8 @@ include ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_if_ros_msg/adore_if_ros_msg.mk
 include ${SUMO_IF_ROS_SUBMODULES_PATH}/cpplint_docker/cpplint_docker.mk
 include ${SUMO_IF_ROS_SUBMODULES_PATH}/cppcheck_docker/cppcheck_docker.mk
 include ${SUMO_IF_ROS_SUBMODULES_PATH}/lizard_docker/lizard_docker.mk
+
+CPP_PROJECT_DIRECTORY:=${SUMO_IF_ROS_MAKEFILE_PATH}/${SUMO_IF_ROS_PROJECT}
 
 .PHONY: build_sumo_if_ros 
 build_sumo_if_ros: ## Build sumo_if_ros
