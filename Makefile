@@ -7,9 +7,12 @@ MAKEFILE_PATH:=$(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST)"))")
 
 MAKEFLAGS += --no-print-directory
 
-$(shell git submodule update --init --recursive --remote --depth 1 --jobs 4 --single-branch ${ROOT_DIR}/sumo/*)
-
 include sumo_if_ros.mk
+
+ifeq ($(wildcard $(MAKE_GADGETS_PATH)/*),)
+  $(shell git submodule update --init --recursive --remote --depth 1 --jobs 4 --single-branch ${ROOT_DIR}/sumo/*)
+endif
+
 
 .EXPORT_ALL_VARIABLES:
 DOCKER_BUILDKIT?=1
@@ -36,11 +39,7 @@ init_sumo_submodule:
 	git submodule update --init --recursive --depth 1 sumo/sumo
 
 .PHONY: clean_submodules
-clean_submodules:
-	$(eval MAKE_GADGETS_MAKEFILE_PATH := $(shell unset MAKE_GADGETS_MAKEFILE_PATH))
-	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_if_ros_msg && make clean
-	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/coordinate_conversion && make clean
-	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_v2x_sim && make clean
+clean_submodules: clean_adore_if_ros_msg clean_coordinate_conversion clean_adore_v2x_sim
 
 .PHONY: clean
 clean: set_env ## Clean sumo_if_ros build artifacts
