@@ -9,8 +9,12 @@ MAKEFLAGS += --no-print-directory
 
 include sumo_if_ros.mk
 
+.PHONY: init_sumo_submodule
+init_sumo_submodule:
 ifeq ($(wildcard $(MAKE_GADGETS_PATH)/*),)
   $(shell git submodule update --init --recursive --remote --depth 1 --jobs 4 --single-branch ${ROOT_DIR}/sumo/*)
+else
+	@echo "sumo submodule already initialized, skipping submodule init for sumo."
 endif
 
 
@@ -20,23 +24,47 @@ DOCKER_CONFIG?=
 
 SUMO_PROJECT:="sumo"
 SUMO_TAG:="v1_13_0"
-sumo_TAG:="${SUMO_TAG}"
 SUMO_IMAGE_NAME:="${SUMO_PROJECT}:${SUMO_TAG}"
 
 PROJECT:=${SUMO_IF_ROS_PROJECT}
 TAG:=${SUMO_IF_ROS_TAG}
 
+SUMO_DOCKER_ARCHIVE="/var/tmp/${SUMO_PROJECT}_${SUMO_TAG}.tar"
+
+DOCKER_REPOSITORY="andrewkoerner/adore"
+
 .PHONY: all
 all: root_check docker_group_check build
+
+.PHONY: save_docker_images
+save_docker_images:
+	@docker save -o "${SUMO_DOCKER_ARCHIVE}" "${SUMO_IMAGE_NAME}"
+
+.PHONY: load_docker_images
+load_docker_images:
+	@docker load --input "${SUMO_DOCKER_ARCHIVE}" 2>/dev/null || true
+
+.PHONY: load_sumo_image
+load_sumo_image:
+	@if [ ! -n "$$(docker images -q ${SUMO_IMAGE_NAME})" ]; then \
+        make load_docker_images;\
+    fi
+	@if [ ! -n "$$(docker images -q ${SUMO_IMAGE_NAME})" ]; then \
+        make docker_pull;\
+    fi
+
+.PHONY: build_fast_sumo
+build_fast_sumo: load_sumo_image
+	@if [ -n "$$(docker images -q ${SUMO_IMAGE_NAME})" ]; then \
+        echo "Docker image: ${SUMO_IMAGE_NAME} already build, skipping build."; \
+    else \
+        make build_sumo;\
+    fi
 
 .PHONY: set_env 
 set_env: 
 	$(eval PROJECT := ${SUMO_IF_ROS_PROJECT}) 
 	$(eval TAG := ${SUMO_IF_ROS_TAG})
-
-.PHONY: init_sumo_submodule
-init_sumo_submodule:
-	git submodule update --init --recursive --depth 1 sumo/sumo
 
 .PHONY: clean_submodules
 clean_submodules: clean_adore_if_ros_msg clean_coordinate_conversion clean_adore_v2x_sim
@@ -58,7 +86,7 @@ clean: set_env ## Clean sumo_if_ros build artifacts
 	docker rmi $$(docker images -q ${PROJECT}:${TAG}) 2> /dev/null || true
 
 .PHONY: build
-build: set_env start_apt_cacher_ng _build get_cache_statistics ## Build sumo_if_ros 
+build: set_env start_apt_cacher_ng _build save_docker_images get_cache_statistics ## Build sumo_if_ros 
 
 .PHONY: _build
 _build: set_env build_sumo
@@ -77,7 +105,7 @@ _build: set_env build_sumo
 	docker cp $$(docker create --rm ${PROJECT}:${TAG}):/tmp/${PROJECT}/${PROJECT}/build "${ROOT_DIR}/${PROJECT}"
 
 .PHONY: build_sumo
-build_sumo:
+build_sumo: init_sumo_submodule
 	cd "${ROOT_DIR}/sumo" && rm -rf "build"
 	cd "${ROOT_DIR}/sumo" && \
 	docker build --network host \
@@ -86,3 +114,15 @@ build_sumo:
 
 .PHONY: static_checks
 static_checks: lizard cppcheck lint
+
+.PHONY: docker_publish
+docker_publish:
+	docker tag "${SUMO_IMAGE_NAME}" "${DOCKER_REPOSITORY}:${SUMO_PROJECT}_${SUMO_TAG}"
+	docker push ${DOCKER_REPOSITORY}:${SUMO_PROJECT}_${SUMO_TAG}
+
+.PHONY: docker_pull
+docker_pull:
+	docker pull "${DOCKER_REPOSITORY}:${SUMO_PROJECT}_${SUMO_TAG}"
+	docker tag "${DOCKER_REPOSITORY}:${SUMO_PROJECT}_${SUMO_TAG}" "${SUMO_IMAGE_NAME}"
+	docker rmi "${DOCKER_REPOSITORY}:${SUMO_PROJECT}_${SUMO_TAG}"
+
