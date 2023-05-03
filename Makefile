@@ -58,8 +58,10 @@ build_fast_sumo: load_sumo_image
 	@if [ -n "$$(docker images -q ${SUMO_IMAGE_NAME})" ]; then \
         echo "Docker image: ${SUMO_IMAGE_NAME} already build, skipping build."; \
     else \
-        make build_sumo;\
+        make load_sumo_image;\
+        #make build_sumo;\
     fi
+	cd "${ROOT_DIR}/sumo" && docker cp $$(docker create --rm ${SUMO_IMAGE_NAME}):/tmp/sumo/build build
 
 .PHONY: set_env 
 set_env: 
@@ -89,7 +91,7 @@ clean: set_env ## Clean sumo_if_ros build artifacts
 build: set_env start_apt_cacher_ng _build save_docker_images get_cache_statistics ## Build sumo_if_ros 
 
 .PHONY: _build
-_build: set_env build_sumo
+_build: set_env build_fast_sumo
 	$(eval MAKE_GADGETS_MAKEFILE_PATH := $(shell unset MAKE_GADGETS_MAKEFILE_PATH))
 	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_if_ros_msg && make build 
 	cd ${SUMO_IF_ROS_SUBMODULES_PATH}/adore_v2x_sim && make build 
