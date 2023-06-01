@@ -30,3 +30,6 @@
 [submodule "coordinate_conversion"]
 	path = coordinate_conversion
 	url = git@github.com:dlr-ts/coordinate_conversion
+[submodule "make_gadgets"]
+	path = make_gadgets
+	url = git@github.com:DLR-TS/make_gadgets.git
