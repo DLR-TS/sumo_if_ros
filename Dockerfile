@@ -41,7 +41,8 @@ RUN cmake --install . --prefix ${INSTALL_PREFIX}
 
 COPY --from=adore_v2x_sim /tmp/adore_v2x_sim /tmp/adore_v2x_sim
 WORKDIR /tmp/adore_v2x_sim/adore_v2x_sim/build
-RUN cmake --install . --prefix ${INSTALL_PREFIX} 
+RUN cmake --install . --prefix ${INSTALL_PREFIX}
+
 
 COPY --from=sumo /tmp/sumo/build /tmp/sumo/build
 #WORKDIR /tmp/sumo/build
@@ -51,6 +52,8 @@ COPY --from=sumo /tmp/sumo/build /tmp/sumo/build
 COPY --from=coordinate_conversion /tmp/coordinate_conversion /tmp/coordinate_conversion
 WORKDIR /tmp/coordinate_conversion/coordinate_conversion/build
 RUN cmake --install . --prefix ${INSTALL_PREFIX} 
+
+COPY ${PROJECT} /tmp/${PROJECT}
 
 FROM sumo_if_ros_requirements_base AS sumo_if_ros_builder
 
@@ -66,7 +69,7 @@ RUN source /opt/ros/noetic/setup.bash && \
     cmake --build . --config Release --target install -- -j $(nproc) && \
     cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . && \
     cp -r /tmp/${PROJECT}/${PROJECT}/build/devel/lib/${PROJECT} /tmp/${PROJECT}/${PROJECT}/build/install/lib/${PROJECT} && \
-    mv CMakeCache.txt CMakeCache.txt.build
+    mv CMakeCache.txt CMakeCache.txt.build || true
 
 #FROM alpine:3.14 AS sumo_if_ros_package
 

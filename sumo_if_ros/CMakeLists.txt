@@ -49,7 +49,7 @@ list(APPEND CMAKE_PREFIX_PATH "${COORDINATE_CONVERSION_CMAKE_INSTALL_PATH}")
 
 find_package(adore_if_ros_msg CONFIG REQUIRED)
 #find_package(SUMO CONFIG REQUIRED)
-#find_package(v2x_if_ros_msg CONFIG REQUIRED)
+#find_package(v2x_if_ros_msg CONFIG REQUIRED)# does not work because v2x_if_ros_msg is poorly packaged
 find_package(coordinate_conversion CONFIG REQUIRED)
 find_package(adore_v2x_sim CONFIG REQUIRED)
 
