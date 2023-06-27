@@ -32,7 +32,7 @@ git submodule update --init --recursive
 2. run make
 ```bash
 cd sumo_if_ros
-make
+make build
 ```
 
 ### Linting
