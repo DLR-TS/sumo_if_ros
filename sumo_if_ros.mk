@@ -53,18 +53,18 @@ CPP_PROJECT_DIRECTORY:=${SUMO_IF_ROS_MAKEFILE_PATH}/${SUMO_IF_ROS_PROJECT}
 
 .PHONY: build_sumo_if_ros 
 build_sumo_if_ros: ## Build sumo_if_ros
-	cd "${sumo_if_ros_MAKEFILE_PATH}" && make
+	cd "${SUMO_IF_ROS_MAKEFILE_PATH}" && make
 
 .PHONY: clean_sumo_if_ros
 clean_sumo_if_ros: ## Clean sumo_if_ros build artifacts
-	cd "${sumo_if_ros_MAKEFILE_PATH}" && make clean
+	cd "${SUMO_IF_ROS_MAKEFILE_PATH}" && make clean
 
 .PHONY: branch_sumo_if_ros
 branch_sumo_if_ros: ## Returns the current docker safe/sanitized branch for sumo_if_ros
-	@printf "%s\n" ${sumo_if_ros_tag}
+	@printf "%s\n" ${SUMO_IF_ROS_TAG}
 
 .PHONY: image_sumo_if_ros
 image_sumo_if_ros: ## Returns the current docker image name for sumo_if_ros
-	@printf "%s\n" ${sumo_if_ros_image}
+	@printf "%s\n" ${SUMO_IF_ROS_IMAGE}
 
 endif
