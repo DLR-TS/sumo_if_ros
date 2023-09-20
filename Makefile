@@ -26,9 +26,11 @@ SUMO_PROJECT:=sumo
 SUMO_TAG:=v1_13_0
 SUMO_IMAGE_NAME:=${SUMO_PROJECT}:${SUMO_TAG}
 
-SUMO_DOCKER_ARCHIVE=/var/tmp/${SUMO_PROJECT}_${SUMO_TAG}.tar
+EXTERNALS_DOCKER_DIRECTORY=/var/tmp/docker
+SUMO_DOCKER_ARCHIVE=${EXTERNALS_DOCKER_DIRECTORY}/${SUMO_PROJECT}_${SUMO_TAG}.tar
 
 DOCKER_REPOSITORY="andrewkoerner/adore"
+
 
 .PHONY: set_env 
 set_env: 
@@ -41,7 +43,12 @@ all: root_check docker_group_check build
 
 .PHONY: save_docker_archive
 save_docker_archive:
+	@echo "Docker local cache archive for ${SUMO_IMAGE_NAME} saved to: ${SUMO_DOCKER_ARCHIVE}"
+	@mkdir -p ${EXTERNALS_DOCKER_DIRECTORY}
 	@docker save -o "${SUMO_DOCKER_ARCHIVE}" "${SUMO_IMAGE_NAME}"
+	@chgrp -R docker ${EXTERNALS_DOCKER_DIRECTORY} || true
+	@chmod -R 2775 ${EXTERNALS_DOCKER_DIRECTORY} || true
+
 
 .PHONY: load_docker_archive
 load_docker_archive:
@@ -84,6 +91,10 @@ clean: set_env ## Clean sumo_if_ros build artifacts
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	docker rm $$(docker ps -a -q --filter "ancestor=${PROJECT}:${TAG}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${PROJECT}:${TAG}) 2> /dev/null || true
+
+.PHONY: clean_sumo_library_cache 
+clean_sumo_library_cache: ## clean all clean_sumo_library_cache external library cache located in /var/tmp. Note: This is never done automatically and must be manually invoked.
+	rm ${SUMO_DOCKER_ARCHIVE}
 
 .PHONY: build
 build: set_env start_apt_cacher_ng _build save_docker_archive get_cache_statistics ## Build sumo_if_ros 

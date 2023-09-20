@@ -59,6 +59,10 @@ build_sumo_if_ros: ## Build sumo_if_ros
 clean_sumo_if_ros: ## Clean sumo_if_ros build artifacts
 	cd "${SUMO_IF_ROS_MAKEFILE_PATH}" && make clean
 
+.PHONY: clean_sumo_library_cache
+clean_sumo_library_cache: ## Clean/delete sumo system wide cache in /var/tmp/docker. Note: this is never done automatically and must be manually invoked. 
+	cd "${SUMO_IF_ROS_MAKEFILE_PATH}" && make clean_sumo_library_cache
+
 .PHONY: branch_sumo_if_ros
 branch_sumo_if_ros: ## Returns the current docker safe/sanitized branch for sumo_if_ros
 	@printf "%s\n" ${SUMO_IF_ROS_TAG}
